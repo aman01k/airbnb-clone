@@ -10,9 +10,6 @@
 
 <!-- OVERVIEW -->
 
-## Overview
-
-![Windbnb Preview](https://github.com/varJonathanR/windbnb/blob/main/public/windbnb_preview.png)
 
 ### Built With
 
@@ -23,7 +20,6 @@
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/varJonathanR/windbnb
 
 # Install dependencies
 $ npm install
