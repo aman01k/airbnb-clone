@@ -17,17 +17,6 @@
 - CSS
 - [Bootstrap Icons](https://icons.getbootstrap.com/)
 
-
-```bash
-# Clone this repository
-
-# Install dependencies
-$ npm install
-
-# Run the app
-$ npm start
-```
-
 ## Contact
 - GitHub [@aman01kk](https://github.com/aman01k)
 - LinkedIn [@aman01kk](https://www.linkedin.com/in/aman01kk/)
