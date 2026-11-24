@@ -1,0 +1,28 @@
+# Runs the whole app with Docker: `docker compose up --build`, then open http://localhost:4000
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: nestly
+      POSTGRES_PASSWORD: nestly
+      POSTGRES_DB: nestly
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nestly"]
+      interval: 2s
+      retries: 20
+
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgresql://nestly:nestly@db:5432/nestly
+      JWT_SECRET: change-this-to-a-long-random-string-of-32-chars-or-more
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

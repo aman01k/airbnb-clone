@@ -11,7 +11,7 @@ describe("auth", () => {
     expect(me.body.user.passwordHash).toBeUndefined();
 
     expect((await agent.post("/api/auth/logout")).status).toBe(204);
-    expect((await agent.get("/api/auth/me")).status).toBe(401);
+    expect((await agent.get("/api/auth/me")).body.user).toBeNull();
   });
 
   it("sets an httpOnly cookie", async () => {
@@ -44,11 +44,11 @@ describe("auth", () => {
 
     const agent = request.agent(app);
     expect((await agent.post("/api/auth/login").send({ email, password: "password123" })).status).toBe(200);
-    expect((await agent.get("/api/auth/me")).status).toBe(200);
+    expect((await agent.get("/api/auth/me")).body.user.email).toBe(email);
   });
 
   it("ignores a tampered token", async () => {
     const res = await request(app).get("/api/auth/me").set("Cookie", "nestly_token=not.a.real.token");
-    expect(res.status).toBe(401);
+    expect(res.body.user).toBeNull();
   });
 });

@@ -5,7 +5,7 @@
  *
  * Every demo account uses the password: password123
  */
-import { PrismaClient, type PropertyType } from "@prisma/client";
+import { PrismaClient, type Listing, type PropertyType } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { nightsBetween, toDate, toIso } from "../src/lib/dates.js";
 import { quote } from "../src/lib/pricing.js";
@@ -112,7 +112,7 @@ async function main() {
   const [demoGuest, ...otherGuests] = guests;
 
   console.log("Creating stays…");
-  const listings = [];
+  const listings: Listing[] = [];
   for (const [i, l] of LISTINGS.entries()) {
     const { host, country, ...data } = l;
     listings.push(

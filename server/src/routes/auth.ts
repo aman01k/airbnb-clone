@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "../db.js";
 import { conflict, unauthorized } from "../lib/http.js";
-import { clearAuthCookie, currentUserId, requireAuth, setAuthCookie } from "../middleware/auth.js";
+import { clearAuthCookie, setAuthCookie } from "../middleware/auth.js";
 import { parse } from "../middleware/error.js";
 
 export const authRouter = Router();
@@ -50,11 +50,10 @@ authRouter.post("/logout", (_req, res) => {
   res.status(204).end();
 });
 
-authRouter.get("/me", requireAuth, async (req, res) => {
-  const user = await prisma.user.findUnique({ where: { id: currentUserId(req) }, select: publicUser });
-  if (!user) {
-    clearAuthCookie(res);
-    throw unauthorized();
-  }
+/** The signed-in user, or `{ user: null }` for visitors (not an error). */
+authRouter.get("/me", async (req, res) => {
+  if (!req.userId) return res.json({ user: null });
+  const user = await prisma.user.findUnique({ where: { id: req.userId }, select: publicUser });
+  if (!user) clearAuthCookie(res); // account no longer exists
   res.json({ user });
 });
