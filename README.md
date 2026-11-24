@@ -31,8 +31,8 @@ It's built from scratch with **React + TypeScript** on the front end and **Node.
 - **No double bookings, even under concurrent requests.** A PostgreSQL `EXCLUDE USING gist` constraint on `daterange(checkIn, checkOut)` rejects overlapping confirmed bookings at the database level. The API's own check gives a friendly early error, and if two requests still race past it, Postgres rejects one and the API returns `409`. A test fires 5 simultaneous bookings and asserts exactly one succeeds.
 - Logins use an `httpOnly`, `SameSite=Lax` cookie holding a signed JWT, so page scripts can't read the token. Passwords are hashed with bcrypt.
 - Every input is validated with **zod**, and field-level error messages are shown next to the right form fields.
-- Dates are stored as Postgres `DATE` values and passed around as `YYYY-MM-DD` strings, so a stay never shifts by a day across time zones.
-- **26 API tests** (Vitest + Supertest) against a real PostgreSQL test database.
+- Dates are stored as Postgres `DATE` values and passed around as `YYYY-MM-DD` strings, so a stay never shifts by a day across time zones. "Today" (for check-in, cancellation and review rules) is computed in the app's time zone, `APP_TIME_ZONE`, which defaults to India time, rather than UTC.
+- **30 tests**: 26 API tests (Vitest + Supertest) against a real PostgreSQL test database, plus unit tests for date handling.
 - In production one Express server serves the API and the built React app, so the whole project deploys as a single service.
 
 ## Tech stack

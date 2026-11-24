@@ -7,7 +7,7 @@
  */
 import { PrismaClient, type Listing, type PropertyType } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { nightsBetween, toDate, toIso } from "../src/lib/dates.js";
+import { addDays, nightsBetween, toDate, todayIso } from "../src/lib/dates.js";
 import { quote } from "../src/lib/pricing.js";
 
 const prisma = new PrismaClient();
@@ -33,10 +33,7 @@ const photo = (i: number) =>
 const photosFrom = (start: number) => [0, 3, 6, 9, 12].map((k) => photo(start + k));
 
 const day = (offset: number) => {
-  const d = new Date();
-  d.setUTCHours(0, 0, 0, 0);
-  d.setUTCDate(d.getUTCDate() + offset);
-  return toIso(d);
+  return addDays(todayIso(), offset);
 };
 
 type Seed = {
