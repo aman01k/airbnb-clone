@@ -1,7 +1,7 @@
 import request from "supertest";
 import { createApp } from "../src/app.js";
 import { prisma } from "../src/db.js";
-import { toDate } from "../src/lib/dates.js";
+import { addDays, toDate, todayIso } from "../src/lib/dates.js";
 
 export const app = createApp();
 
@@ -37,12 +37,9 @@ export async function createListing(agent: ReturnType<typeof request.agent>, ove
   return res.body.listing as { id: string };
 }
 
-/** "YYYY-MM-DD" n days from today (UTC). */
+/** "YYYY-MM-DD" n days from today, in the app time zone (same as the server). */
 export function day(offset: number) {
-  const d = new Date();
-  d.setUTCHours(0, 0, 0, 0);
-  d.setUTCDate(d.getUTCDate() + offset);
-  return d.toISOString().slice(0, 10);
+  return addDays(todayIso(), offset);
 }
 
 /** Inserts a booking directly, e.g. one in the past that the API wouldn't allow. */
